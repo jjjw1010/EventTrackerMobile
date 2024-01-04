@@ -1,4 +1,5 @@
 import React from 'react';
+
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -6,83 +7,55 @@ import {
   StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {useState, useEffect} from 'react';
 
-type SectionProps = PropsWithChildren<{
+type HeaderProps = PropsWithChildren<{
   title: string;
 }>;
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+function Header({title}: HeaderProps): React.JSX.Element {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={styles.headerContainer}>
+      <Text style={styles.headerTitle}>{title}</Text>
     </View>
   );
 }
 
+type SectionProps = PropsWithChildren<{
+  time: number;
+}>;
+
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+  useEffect(() => {
+    // Update the current time every second
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
+    // Clear the interval when the component is unmounted
+    return () => clearInterval(intervalId);
+  }, []);
+  const formattedTime = currentTime.toLocaleTimeString();
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          {/* <LearnMoreLinks /> */}
+    <SafeAreaView>
+      <StatusBar />
+      <ScrollView contentInsetAdjustmentBehavior="automatic">
+        <Header title="CountDown">{}</Header>
+        <View style={styles.itemContainer}>
+          <Text>{formattedTime}</Text>
+        </View>
+        <View style={styles.itemContainer}>
+          <Text>{formattedTime}</Text>
+        </View>
+        <View style={styles.itemContainer}>
+          <Text>{formattedTime}</Text>
+        </View>
+        <View style={styles.itemContainer}>
+          <Text>{formattedTime}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -90,21 +63,27 @@ function App(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  headerContainer: {
+    height: 100,
+    display: 'flex',
+    padding: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#3498db',
   },
-  sectionTitle: {
-    fontSize: 12,
-    fontWeight: '600',
+  headerTitle: {
+    fontWeight: '900',
+    fontSize: 30,
+    color: 'white',
+    fontFamily: 'Arial',
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 12,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  itemContainer: {
+    height: 100,
+    borderRadius: 10,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
   },
 });
 
